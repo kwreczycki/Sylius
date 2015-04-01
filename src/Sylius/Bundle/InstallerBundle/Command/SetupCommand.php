@@ -19,6 +19,7 @@ use Symfony\Component\Validator\Constraints\Currency;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Locale;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class SetupCommand extends AbstractInstallCommand
 {
@@ -45,6 +46,7 @@ EOT
         $this->setupLocales($input, $output);
         $this->setupCurrencies($input, $output);
         $this->setupCountries($input, $output);
+        $this->setupChannels($input, $output);
         $this->setupAdministratorUser($input, $output);
     }
 
@@ -215,6 +217,53 @@ EOT
         }
 
         $countryManager->flush();
+
+        return $this;
+    }
+
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     */
+    protected function setupChannels(InputInterface $input, OutputInterface $output)
+    {
+        $channelRepository = $this->get('sylius.repository.channel');
+        $channelManager = $this->get('sylius.manager.channel');
+
+        $settingsManager = $this->get('sylius.settings.manager');
+
+        $locales = $this->get('sylius.repository.locale')->findAll();
+        $currencies = $this->get('sylius.repository.currency')->findAll();
+
+        $output->writeln('Please enter a list of channel names, separated by commas or just hit ENTER if you are not sure. For example "Web, Mobile".');
+        $channels = $this->ask($output, '<question>Which channels would you like to distinguish for custom locales/currencies/categorization ?</question> ', array(), 'Default');
+
+        $channels = explode(',', $channels);
+
+        foreach ($channels as $key => $channel) {
+            $code = trim($channel);
+            $name = $code;
+
+            $output->writeln(sprintf('Adding <info>%s</info>.', $name));
+
+            if (null !== $channelRepository->findOneByName($name)) {
+                continue;
+            }
+
+            $channel = $channelRepository->createNew();
+            $channel->setName($name);
+            $channel->setCode($code);
+            $channel->setCurrencies(new ArrayCollection($currencies));
+            $channel->setLocales(new ArrayCollection($locales));
+
+            $channelManager->persist($channel);
+
+            if ($key === 0) {
+                $settingsManager->loadSettings('general')->set('channel', $channel);
+            }
+        }
+
+        $channelManager->flush();
 
         return $this;
     }
