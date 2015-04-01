@@ -26,4 +26,20 @@ interface ChannelRepositoryInterface
      * @return null|ChannelInterface
      */
     public function findMatchingHostname($hostname);
+
+    /**
+     * Find channel by code.
+     *
+     * @param string $code
+     *
+     * @return null|ChannelInterface
+     */
+    public function findByCode($code);
+
+    /**
+     * Find enabled channels.
+     *
+     * @return array|ChannelInterface[]
+     */
+    public function findEnabledChannels();
 }

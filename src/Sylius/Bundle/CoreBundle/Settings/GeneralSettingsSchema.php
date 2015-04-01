@@ -50,6 +50,7 @@ class GeneralSettingsSchema implements SchemaInterface
                 'meta_description' => 'Sylius is modern ecommerce solution for PHP. Based on the Symfony2 framework.',
                 'locale'           => 'en',
                 'currency'         => 'USD',
+                'channel'          => 'default'
             ), $this->defaults))
             ->setAllowedTypes(array(
                 'title'            => array('string'),
@@ -57,6 +58,7 @@ class GeneralSettingsSchema implements SchemaInterface
                 'meta_description' => array('string'),
                 'locale'           => array('string'),
                 'currency'         => array('string'),
+                'channel'          => array('string'),
             ))
         ;
     }
@@ -97,6 +99,12 @@ class GeneralSettingsSchema implements SchemaInterface
                 'constraints' => array(
                     new NotBlank(),
                     new Currency(),
+                )
+            ))
+            ->add('channel', 'sylius_channel_code_choice', array(
+                'label'       => 'sylius.form.settings.general.channel',
+                'constraints' => array(
+                    new NotBlank(),
                 )
             ))
         ;

@@ -21,6 +21,9 @@ use Sylius\Component\Channel\Repository\ChannelRepositoryInterface;
  */
 class ChannelRepository extends EntityRepository implements ChannelRepositoryInterface
 {
+    /**
+     * {@inheritdoc}
+     */
     public function findMatchingHostname($hostname)
     {
         $queryBuilder = $this->createQueryBuilder('channel');
@@ -31,5 +34,32 @@ class ChannelRepository extends EntityRepository implements ChannelRepositoryInt
         ;
 
         return $queryBuilder->getQuery()->getOneOrNullResult();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findByCode($code)
+    {
+        $queryBuilder = $this->createQueryBuilder('channel');
+
+        $queryBuilder
+            ->andWhere('channel.code = :code')
+            ->setParameter('code', $code)
+        ;
+
+        return $queryBuilder->getQuery()->getOneOrNullResult();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findEnabledChannels()
+    {
+        $queryBuilder = $this->createQueryBuilder('channel');
+
+        $queryBuilder->andWhere('channel.enabled = 1');
+
+        return $queryBuilder->getQuery()->getResult();
     }
 }

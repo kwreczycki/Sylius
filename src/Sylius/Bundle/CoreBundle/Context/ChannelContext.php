@@ -13,15 +13,16 @@ namespace Sylius\Bundle\CoreBundle\Context;
 
 use Sylius\Component\Channel\Context\ChannelContext as BaseChannelContext;
 use Sylius\Component\Channel\Context\ChannelContextInterface;
+use Sylius\Bundle\SettingsBundle\Manager\SettingsManagerInterface;
 use Sylius\Component\Core\Channel\ChannelResolverInterface;
 use Symfony\Component\HttpKernel\Event\KernelEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-
 
 /**
  * Core channel context, which is aware of multiple channels.
  *
  * @author Kristian Løvstrøm <kristian@loevstroem.dk>
+ * @author Christian Daguerre <christian@daguer.re>
  */
 class ChannelContext extends BaseChannelContext implements ChannelContextInterface
 {
@@ -31,11 +32,27 @@ class ChannelContext extends BaseChannelContext implements ChannelContextInterfa
     protected $channelResolver;
 
     /**
-     * @param ChannelResolverInterface $channelResolver
+     * @var SettingsManagerInterface
      */
-    public function __construct(ChannelResolverInterface $channelResolver)
+    protected $settingsManager;
+
+    /**
+     * @param ChannelResolverInterface $channelResolver
+     * @param SettingsManagerInterface $settingsManager
+     */
+    public function __construct(ChannelResolverInterface $channelResolver, SettingsManagerInterface $settingsManager, $channelRepository)
     {
         $this->channelResolver = $channelResolver;
+        $this->channelRepository = $channelRepository;
+        $this->settingsManager = $settingsManager;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDefaultChannel()
+    {
+        return $this->settingsManager->loadSettings('general')->get('channel');
     }
 
     /**
@@ -45,6 +62,14 @@ class ChannelContext extends BaseChannelContext implements ChannelContextInterfa
     {
         if ($event->getRequestType() === HttpKernelInterface::MASTER_REQUEST) {
             $this->channel = $this->channelResolver->resolve($event->getRequest());
+
+            if (null === $this->channel) {
+                $this->channel = $this->channelRepository->findByCode($this->getDefaultChannel());
+            }
+
+            if (null === $this->channel) {
+                throw new \RuntimeException('Unable to determine current or default channel.');
+            }
         }
     }
 }

@@ -18,6 +18,7 @@
 
     <parameters>
         <parameter key="sylius.form.type.channel.class">Sylius\Bundle\ChannelBundle\Form\Type\ChannelType</parameter>
+        <parameter key="sylius.form.type.channel_code_choice.class">Sylius\Bundle\ChannelBundle\Form\Type\ChannelCodeChoiceType</parameter>
         <parameter key="sylius.context.channel.class">Sylius\Component\Channel\Context\ChannelContext</parameter>
     </parameters>
 
@@ -26,6 +27,10 @@
             <argument>%sylius.model.channel.class%</argument>
             <argument>%sylius.validation_group.channel%</argument>
             <tag name="form.type" alias="sylius_channel" />
+        </service>
+        <service id="sylius.form.type.channel_code_choice" class="%sylius.form.type.channel_code_choice.class%">
+            <argument type="service" id="sylius.repository.channel" />
+            <tag name="form.type" alias="sylius_channel_code_choice" />
         </service>
         <service id="sylius.form.type.channel_choice" class="%sylius.form.type.channel_choice.class%">
             <argument>%sylius.model.channel.class%</argument>
