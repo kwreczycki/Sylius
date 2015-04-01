@@ -28,12 +28,14 @@ class LoadChannelsData extends DataFixture
     public function load(ObjectManager $manager)
     {
         $url = $this->container->getParameter('router.request_context.host');
-        $manager->persist($this->createChannel('WEB-UK', 'UK Webstore', $url, array('en_GB'), array('GBP'), array('DHL', 'UPS Ground'), array('Dummy', 'Stripe')));
+        $manager->persist($this->createChannel('WEB-UK', 'UK Webstore', $url, array('en_US'), array('GBP'), array('DHL', 'UPS Ground'), array('Dummy', 'Stripe')));
         $manager->persist($this->createChannel('WEB-DE', 'Germany Webstore', null, array('de_DE'), array('EUR'), array('DHL', 'UPS Ground'), array('Dummy', 'Stripe')));
         $manager->persist($this->createChannel('WEB-US', 'United States Webstore', null, array('en_US'), array('USD'), array('FedEx', 'FedEx World Shipping'), array('Dummy', 'Stripe')));
-        $manager->persist($this->createChannel('MOBILE', 'Mobile Store', null, array('en_GB', 'de_DE'), array('GBP', 'USD', 'EUR'), array('DHL', 'UPS Ground', 'FedEx'), array('Dummy', 'Stripe')));
+        $manager->persist($this->createChannel('MOBILE', 'Mobile Store', null, array('en_US', 'de_DE'), array('GBP', 'USD', 'EUR'), array('DHL', 'UPS Ground', 'FedEx'), array('Dummy', 'Stripe')));
 
         $manager->flush();
+
+        $this->container->get('sylius.context.channel')->setChannel($this->getReference('Sylius.Channel.WEB-UK'));
     }
 
     /**
