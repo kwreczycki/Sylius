@@ -16,6 +16,15 @@
         <div class="sf-toolbar-info-piece">
             <a href="http://docs.sylius.org/en/latest/" rel="help">Sylius Documentation</a>
         </div>
+        <hr>
+        <div class="sf-toolbar-info-piece">
+            <b>Currency</b>
+            <span>{{ collector.currency }}</span>
+        </div>
+        <div class="sf-toolbar-info-piece">
+            <b>Channel</b>
+            <span>{{ collector.channel }}</span>
+        </div>
     {% endset %}
     {% include '@WebProfiler/Profiler/toolbar_item.html.twig' with {'link': false} %}
 {% endblock %}
