@@ -11,15 +11,15 @@
 
 namespace Sylius\Bundle\ChannelBundle\Templating\Helper;
 
-use Sylius\Bundle\MoneyBundle\Templating\Helper\MoneyHelper as BaseMoneyHelper;
 use Sylius\Component\Channel\Context\ChannelContextInterface;
+use Symfony\Component\Templating\Helper\Helper;
 
 /**
  * Sylius channel Twig helper.
  *
  * @author Christian Daguerre <christian@daguer.re>
  */
-class ChannelHelper extends BaseMoneyHelper
+class ChannelHelper extends Helper
 {
     /**
      * Channel context.
