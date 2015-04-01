@@ -12,7 +12,7 @@
 namespace Sylius\Bundle\CoreBundle\Context;
 
 use Sylius\Component\Channel\Context\ChannelContext as BaseChannelContext;
-use Sylius\Component\Core\Channel\ChannelContextInterface;
+use Sylius\Component\Channel\Context\ChannelContextInterface;
 use Sylius\Component\Core\Channel\ChannelResolverInterface;
 use Symfony\Component\HttpKernel\Event\KernelEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
