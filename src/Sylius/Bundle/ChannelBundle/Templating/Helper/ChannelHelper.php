@@ -40,4 +40,16 @@ class ChannelHelper extends Helper
     {
         return $this->channelContext->getChannel();
     }
+
+    /**
+     * Returns the canonical name of this helper.
+     *
+     * @return string The canonical name
+     *
+     * @api
+     */
+    public function getName()
+    {
+        return 'sylius_channel';
+    }
 }
