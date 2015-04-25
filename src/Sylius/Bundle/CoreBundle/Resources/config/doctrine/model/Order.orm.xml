@@ -16,6 +16,9 @@
         <field type="string" name="shippingState" column="shipping_state" />
 
         <many-to-one field="channel" target-entity="Sylius\Component\Channel\Model\ChannelInterface">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
             <join-column name="channel_id" referenced-column-name="id" nullable="true" />
         </many-to-one>
 
