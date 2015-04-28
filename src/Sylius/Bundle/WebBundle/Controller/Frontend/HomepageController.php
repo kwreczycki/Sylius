@@ -28,6 +28,8 @@ class HomepageController extends Controller
      */
     public function mainAction()
     {
-        return $this->render('SyliusWebBundle:Frontend/Homepage:main.html.twig');
+        return $this->render('SyliusWebBundle:Frontend/Homepage:main.html.twig', [
+            'channel' => $this->get('sylius.context.channel')->getChannel()
+        ]);
     }
 }

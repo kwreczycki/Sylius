@@ -4,9 +4,6 @@
 sylius_partial_product_latest:
     path: /latest
     defaults:
-        _controller: sylius.controller.product:indexAction
+        _controller: sylius.controller.product:showLatestProductAction
         _sylius:
-            paginate: false
-            method: findLatest
-            arguments: [$limit]
             template: $template

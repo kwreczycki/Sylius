@@ -12,6 +12,7 @@
 namespace Sylius\Bundle\CoreBundle\Controller;
 
 use Pagerfanta\Pagerfanta;
+use Sylius\Bundle\CoreBundle\Doctrine\ORM\ProductRepository;
 use Sylius\Bundle\ProductBundle\Controller\ProductController as BaseProductController;
 use Sylius\Bundle\SearchBundle\Query\TaxonQuery;
 use Sylius\Component\Core\Model\ProductInterface;
@@ -235,6 +236,22 @@ class ProductController extends BaseProductController
         return new JsonResponse($results);
     }
 
+    public function showLatestProductAction()
+    {
+        $channel = $this->get('sylius.context.channel')->getChannel();
+
+        /** @var ProductRepository $repository */
+        $repository = $this->getRepository();
+        $results = $repository->findLatest($channel);
+
+        $view = $this->view()
+            ->setTemplate($this->config->getTemplate('default.html'))
+            ->setData(['products' => $results])
+        ;
+
+        return $this->handleView($view);
+    }
+
     /**
      * @param Request $request
      * @param array $criteria
@@ -281,4 +298,6 @@ class ProductController extends BaseProductController
 
         return $this->handleView($view);
     }
+
+
 }
